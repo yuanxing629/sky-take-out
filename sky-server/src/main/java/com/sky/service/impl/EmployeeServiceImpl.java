@@ -69,6 +69,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     /**
      * 新增员工
+     *
      * @param employeeDTO
      */
     @Override
@@ -76,7 +77,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         Employee employee = new Employee();
 
         // 对象属性拷贝 BeanUtils.copyProperties(src, target) 前提是两者的属性名必须一致
-        BeanUtils.copyProperties(employeeDTO,employee);
+        BeanUtils.copyProperties(employeeDTO, employee);
 
         // 设置账号状态，默认启用: 1
         employee.setStatus(StatusConstant.ENABLE);
@@ -85,18 +86,19 @@ public class EmployeeServiceImpl implements EmployeeService {
         employee.setPassword(DigestUtils.md5DigestAsHex(PasswordConstant.DEFAULT_PASSWORD.getBytes()));
 
         // 创建时间和更新时间
-        employee.setCreateTime(LocalDateTime.now());
-        employee.setUpdateTime(LocalDateTime.now());
+        // employee.setCreateTime(LocalDateTime.now());
+        // employee.setUpdateTime(LocalDateTime.now());
 
         // 设置当前记录创建人id和修改人id。即当前登录用户的id
-        employee.setCreateUser(BaseContext.getCurrentId());
-        employee.setUpdateUser(BaseContext.getCurrentId());
+        // employee.setCreateUser(BaseContext.getCurrentId());
+        // employee.setUpdateUser(BaseContext.getCurrentId());
 
         employeeMapper.insert(employee);// 后续步骤定义
     }
 
     /**
      * 员工分页查询
+     *
      * @param employeePageQueryDTO
      * @return
      */
@@ -116,6 +118,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     /**
      * 启用或禁用员工账号
+     *
      * @param status
      * @param id
      */
@@ -125,8 +128,6 @@ public class EmployeeServiceImpl implements EmployeeService {
         Employee employee = Employee.builder()
                 .status(status)
                 .id(id)
-                .updateTime(LocalDateTime.now())
-                .updateUser(BaseContext.getCurrentId())
                 .build();
 
         employeeMapper.update(employee);
@@ -134,6 +135,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     /**
      * 根据ID查询员工
+     *
      * @param id
      * @return
      */
@@ -146,15 +148,16 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     /**
      * 编辑员工信息
+     *
      * @param employeeDTO
      */
     @Override
     public void update(EmployeeDTO employeeDTO) {
         Employee employee = new Employee();
-        BeanUtils.copyProperties(employeeDTO,employee);
+        BeanUtils.copyProperties(employeeDTO, employee);
 
-        employee.setUpdateTime(LocalDateTime.now());
-        employee.setUpdateUser(BaseContext.getCurrentId());
+//        employee.setUpdateTime(LocalDateTime.now());
+//        employee.setUpdateUser(BaseContext.getCurrentId());
 
         employeeMapper.update(employee);
     }
