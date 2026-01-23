@@ -7,7 +7,6 @@ sky:
     username: root
     password: 1234
   alioss:
-    endpoint: oss-cn-chengdu.aliyuncs.com
-    access-key-id: LTAI5tR4Qf85uy6E2yqWUVAu
-    access-key-secret: 6s1rTIafa7nHlLaO65vemiFgEjg6bQ
+    endpoint: https://oss-cn-chengdu.aliyuncs.com
     bucket-name: sky-take-out-for-aster
+    region: cn-chengdu
