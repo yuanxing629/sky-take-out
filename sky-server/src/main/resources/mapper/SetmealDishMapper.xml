@@ -8,9 +8,17 @@
         (setmeal_id,dish_id,name,price,copies)
         values
         <foreach collection="setmealDishes" item="sd" separator=",">
-            (#{sd.setmealId},#{sd.dishId},#{sd.name},#{sd.price},#{sd.copies})
+            (#{sd.setmealId}, #{sd.dishId}, #{sd.name}, #{sd.price}, #{sd.copies})
         </foreach>
     </insert>
+
+    <!--根据套餐ids集合批量删除套餐和菜品对应关系-->
+    <delete id="deleteBySetmealIds">
+        delete from setmeal_dish where setmeal_id in
+        <foreach collection="setmealIds" item="setmealId" separator="," open="(" close=")">
+            #{setmealId}
+        </foreach>
+    </delete>
 
     <!--根据菜品ids查询对应的套餐ids-->
     <select id="getSetmealIdsByDishIds" resultType="java.lang.Long">

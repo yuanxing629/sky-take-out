@@ -10,6 +10,14 @@
                 #{createUser}, #{updateUser})
     </insert>
 
+    <!--根据ids集合批量删除套餐-->
+    <delete id="deleteByIds">
+        delete from setmeal where id in
+        <foreach collection="ids" item="id" separator="," open="(" close=")">
+            #{id}
+        </foreach>
+    </delete>
+
     <!--套餐分页查询-->
     <select id="pageQuery" resultType="com.sky.vo.SetmealVO">
         select s.*, c.name categoryName from setmeal s left join category c on s.category_id = c.id
