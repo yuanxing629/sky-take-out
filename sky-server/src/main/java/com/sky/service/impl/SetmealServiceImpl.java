@@ -80,7 +80,7 @@ public class SetmealServiceImpl implements SetmealService {
     public void deleteBatch(List<Long> ids) {
         // 起售中的套餐不能删除
         ids.forEach(id -> {
-            Setmeal setmeal = setmealMapper.getByID(id);
+            Setmeal setmeal = setmealMapper.getById(id);
             if (Objects.equals(setmeal.getStatus(), StatusConstant.ENABLE)) {
                 throw new DeletionNotAllowedException(MessageConstant.SETMEAL_ON_SALE);
             }
@@ -98,5 +98,48 @@ public class SetmealServiceImpl implements SetmealService {
 
         // 根据套餐ids集合批量删除套餐菜品对应关系
         setmealDishMapper.deleteBySetmealIds(ids);
+    }
+
+    /**
+     * 根据套餐id查询套餐，以及关联的菜品
+     * @param id
+     * @return
+     */
+    @Override
+    public SetmealVO getByIdWithDish(Long id) {
+        Setmeal setmeal = setmealMapper.getById(id); // 查询套餐
+        List<SetmealDish> setmealDishes = setmealDishMapper.getBySetmealId(id); // 查询套餐关联的菜品 -- List
+
+        SetmealVO setmealVO = new SetmealVO();
+        BeanUtils.copyProperties(setmeal, setmealVO);
+        setmealVO.setSetmealDishes(setmealDishes);
+
+        return setmealVO;
+    }
+
+    /**
+     * 修改套餐
+     * @param setmealDTO
+     */
+    @Transactional
+    @Override
+    public void update(SetmealDTO setmealDTO) {
+        Setmeal setmeal = new Setmeal();
+        BeanUtils.copyProperties(setmealDTO, setmeal);
+
+        //1、修改套餐表，执行update
+        setmealMapper.update(setmeal);
+
+        //套餐id
+        Long setmealId = setmealDTO.getId();
+
+        //2、删除套餐和菜品的关联关系，操作setmeal_dish表，执行delete
+        setmealDishMapper.deleteBySetmealId(setmealId);
+
+        List<SetmealDish> setmealDishes = setmealDTO.getSetmealDishes();
+        setmealDishes.forEach(setmealDish -> setmealDish.setSetmealId(setmealId));
+
+        //3、重新插入套餐和菜品的关联关系，操作setmeal_dish表，执行insert
+        setmealDishMapper.insertBatch(setmealDishes);
     }
 }
