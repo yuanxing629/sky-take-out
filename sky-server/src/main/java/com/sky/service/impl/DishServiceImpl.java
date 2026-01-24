@@ -9,6 +9,7 @@ import com.sky.dto.DishPageQueryDTO;
 import com.sky.entity.Dish;
 import com.sky.entity.DishFlavor;
 import com.sky.exception.DeletionNotAllowedException;
+import com.sky.exception.DishDisableFailedException;
 import com.sky.mapper.DishFlavorMapper;
 import com.sky.mapper.DishMapper;
 import com.sky.mapper.SetmealDishMapper;
@@ -21,6 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -170,6 +172,16 @@ public class DishServiceImpl implements DishService {
      */
     @Override
     public void startOrStop(Integer status, Long id) {
+        // 停售菜品时，判断当前菜品是否能够停售
+        if (status.equals(StatusConstant.DISABLE)) {
+            // 如果菜品关联的套餐正在售卖中，则不能停售
+            List<Long> setmealIds = setmealDishMapper.getSetmealIdsByDishIds(Arrays.asList(id));
+            if (setmealIds != null && !setmealIds.isEmpty()) {
+                // 当前菜品关联的套餐正在售卖中，不能停售
+                throw new DishDisableFailedException(MessageConstant.SETMEAL_ON_SALE_DISH_CANNOT_BANNED);
+            }
+        }
+
         Dish dish = Dish.builder()
                 .id(id)
                 .status(status)

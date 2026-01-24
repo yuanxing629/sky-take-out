@@ -8,6 +8,7 @@ import com.sky.context.BaseContext;
 import com.sky.dto.CategoryDTO;
 import com.sky.dto.CategoryPageQueryDTO;
 import com.sky.entity.Category;
+import com.sky.exception.CategoryDisableFailedException;
 import com.sky.exception.DeletionNotAllowedException;
 import com.sky.mapper.CategoryMapper;
 import com.sky.mapper.DishMapper;
@@ -87,11 +88,11 @@ public class CategoryServiceImpl implements CategoryService {
         // 查询当前分类是否关联了套餐，如果关联了就抛出业务异常
         count = setmealMapper.countByCategoryId(id);
         if (count > 0) {
-            // 当前分类下有菜品，不能删除
+            // 当前分类下有套餐，不能删除
             throw new DeletionNotAllowedException(MessageConstant.CATEGORY_BE_RELATED_BY_SETMEAL);
         }
 
-        //删除分类数据
+        // 删除分类数据
         categoryMapper.deleteById(id);
     }
 
@@ -117,12 +118,25 @@ public class CategoryServiceImpl implements CategoryService {
      * @param status
      * @param id
      */
+    @Override
     public void startOrStop(Integer status, Long id) {
+//        // 想要禁用分类时，如果该分类关联的菜品或者套餐有在售的，则不能禁用
+//        if (status.equals(StatusConstant.DISABLE)) {
+//            // 查询当前分类是否关联了菜品，如果关联了则不能禁用
+//            Integer count = dishMapper.countByCategoryId(id);
+//            if (count > 0) {
+//                throw new CategoryDisableFailedException(MessageConstant.DISH_OF_THIS_CATEGORY_ON_SALE);
+//            }
+//            // 查询当前分类是否关联了套餐，如果关联了则不能禁用
+//            count = setmealMapper.countByCategoryId(id);
+//            if (count > 0) {
+//                throw new CategoryDisableFailedException(MessageConstant.SETMEAL_OF_THIS_CATEGORY_ON_SALE);
+//            }
+//        }
+
         Category category = Category.builder()
                 .id(id)
                 .status(status)
-//                .updateTime(LocalDateTime.now())
-//                .updateUser(BaseContext.getCurrentId())
                 .build();
         categoryMapper.update(category);
     }
