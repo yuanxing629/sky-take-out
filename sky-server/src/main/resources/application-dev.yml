@@ -10,3 +10,8 @@ sky:
     endpoint: https://oss-cn-chengdu.aliyuncs.com
     bucket-name: sky-take-out-for-aster
     region: cn-chengdu
+  redis:
+    host: localhost
+    port: 6379
+    password: 123456
+    database: 10
