@@ -85,4 +85,11 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
                 userId(BaseContext.getCurrentId()). // 要查的是当前用户的购物车
                 build());
     }
+
+    /**
+     * 清空购物车商品
+     */
+    public void cleanShoppingCart() {
+        shoppingCartMapper.deleteByUserId(BaseContext.getCurrentId()); // 清空当前用户购物车商品
+    }
 }
