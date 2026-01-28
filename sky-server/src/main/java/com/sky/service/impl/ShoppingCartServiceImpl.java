@@ -82,7 +82,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     public List<ShoppingCart> showShoppingCart() {
         return shoppingCartMapper.list(ShoppingCart.
                 builder().
-                userId(BaseContext.getCurrentId()).
+                userId(BaseContext.getCurrentId()). // 要查的是当前用户的购物车
                 build());
     }
 }
