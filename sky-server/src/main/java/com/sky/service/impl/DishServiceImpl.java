@@ -167,21 +167,21 @@ public class DishServiceImpl implements DishService {
     }
 
     /**
-     * 批量起售停售
+     * 菜品起售停售
      * @param status
      * @param id
      */
     @Override
     public void startOrStop(Integer status, Long id) {
-        // 停售菜品时，判断当前菜品是否能够停售
-        if (status.equals(StatusConstant.DISABLE)) {
-            // 如果菜品关联的套餐正在售卖中，则不能停售
-            List<Long> setmealIds = setmealDishMapper.getSetmealIdsByDishIds(Arrays.asList(id));
-            if (setmealIds != null && !setmealIds.isEmpty()) {
-                // 当前菜品关联的套餐正在售卖中，不能停售
-                throw new DishDisableFailedException(MessageConstant.SETMEAL_ON_SALE_DISH_CANNOT_BANNED);
-            }
-        }
+//        // 停售菜品时，判断当前菜品是否能够停售
+//        if (status.equals(StatusConstant.DISABLE)) {
+//            // 如果菜品关联的套餐正在售卖中，则不能停售
+//            List<Long> setmealIds = setmealDishMapper.getSetmealIdsByDishIds(Arrays.asList(id));
+//            if (setmealIds != null && !setmealIds.isEmpty()) {
+//                // 当前菜品关联的套餐正在售卖中，不能停售
+//                throw new DishDisableFailedException(MessageConstant.SETMEAL_ON_SALE_DISH_CANNOT_BANNED);
+//            }
+//        }
 
         Dish dish = Dish.builder()
                 .id(id)
